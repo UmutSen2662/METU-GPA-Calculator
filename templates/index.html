@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            writeGPA(JSON.parse(`{{ GPAs|safe }}`));
+        }, false);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METU GPA Calculator</title>
+</head>
+
+<body id="main" data-color-mode="auto">
+    <div id="mySidenav" class="sidenav">
+        <div>
+            <span style="margin-left: .8rem; font-size: large;">{{current_user.email}}</span>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+        <a href="#" onclick="openChange()">Change Password</a>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <script> alert("{{messages[0][1]}}"); </script>
+        {% endif %}
+        {% endwith %}
+        <form class="passwordChangeForm" id="change_password" action="{{url_for('change_password')}}" method="post">
+            <div>
+                <input class="formInput" type="password" name="password" id="password" placeholder="Current password" required>
+                <input class="formInput" type="password" name="password1" id="password1" placeholder="New password" onChange="onChange()" required>
+                <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm new password" onChange="onChange()" required>
+                <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
+            </div>
+        </form>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="/signout">Sign out</a>
+    </div>
+
+    <datalist id="courses"></datalist>
+    <header class="banner">
+        <h1>METU GPA Calculator</h1>
+        <div style="padding: .6rem; width: 3rem;">
+            <button class="secondaryColorBtn" onclick="openNav()">&equals;</button>
+        </div>
+    </header>
+    
+    <div id="tab" class="tab">
+        {% for i in range(1, years + 1) %}
+        {% if current_year == i %}
+        <button class="tablinks active" onclick="openTab(event, 'Year {{i}}')">Year {{i}}</button>
+        {% else %}
+        <button class="tablinks" onclick="openTab(event, 'Year {{i}}')">Year {{i}}</button>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div id="years">
+        {% for i in range(years) %}
+        {% if current_year == i + 1 %}
+        <div id="Year {{i + 1}}" class="tabcontent" style="display: grid;">    
+        {% else %}
+        <div id="Year {{i + 1}}" class="tabcontent" style="display: none;">
+        {% endif %}
+            {% for season_name in ["Fall", "Spring", "Summer"] %}
+            {% set season = (3 * i + loop.index - 1) %}
+            <ul id="season {{season}}" class="sortable_list">
+                <h2 style="text-align: center; margin: 0px; margin-top: 8px;">{{season_name}}</h2>
+                <div>
+                    <span style="padding-left: 12px;">#</span>
+                    <span style="font-size: large; padding-left: 2px;">Course Names</span>
+                    <span>Credit</span>
+                    <span>Grade</span>
+                </div>
+                {% for course in course_list[season] %}
+                <div id="{{course['id']}}" class="course">        
+                    <form action=" {{ url_for('delete_course', id = course['id']) }} " method="get">
+                        <button type="submit" class="deleteButton">X</button>
+                    </form>
+                    <span><input name="name" id="i{{course['id']}}" type="text" placeholder="Enter course Name" value="{{course['name']}}" list="courses" autocomplete="off"></span>
+                    <span><input name="credit" id="c{{course['id']}}" type="number" style="text-align: center;" min="0" value="{{course['credit']}}" onclick="this.select()" autocomplete="off"></span>
+                    <select name="grade" id="g{{course['id']}}">
+                        {% for grade in ["XX", "AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF", "NA", "S", "U"] %}
+                        {% if grade == course['grade'] %}
+                        <option value="{{grade}}" selected>{{grade}}</option>
+                        {% else %}
+                        <option value="{{grade}}">{{grade}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+                <li id="l{{season}}">
+                    <form action=" {{ url_for('add_course', season = season) }} " method="get">
+                        <button class="primaryColorBtn">Add course</button>
+                    </form>
+                    <p id="p{{season}}" class="GPADisplay"></p>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="bottomBar">
+        <span id="CGPADisplay" style="margin: auto .6rem; font-size: larger;"> CUMULATIVE GPA : 4.00</span>
+
+        <div class="yearButtons">
+            <form action=" {{ url_for('edit_year', value = 3) }} " method="get">
+                <button type="submit" class="secondaryColorBtn" value="1">Add Year</button>
+            </form>
+            <form action=" {{ url_for('edit_year', value = 1) }} " method="get">
+                <button type="submit" class="secondaryColorBtn" value="-1">Remove Year</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
