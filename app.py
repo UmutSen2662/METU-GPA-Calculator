@@ -14,7 +14,10 @@ SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostnam
     hostname="MetuGpaCalculator.mysql.pythonanywhere-services.com",
     databasename="MetuGpaCalculato$default",
 )
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+if __name__ == "__main__":
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
