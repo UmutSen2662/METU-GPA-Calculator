@@ -1,25 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{url_for('static', filename='script.js')}}"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>METU GPA Calculator</title>
-</head>
+{% extends 'layouts.html' %}
+{% block script %}
+<script>
+    function onChange() {
+        const password = document.querySelector('input[name=password1]');
+        const confirm = document.querySelector('input[name=password2]');
+        if (confirm.value === password.value) {
+            confirm.setCustomValidity('');
+        } else {
+            confirm.setCustomValidity('Passwords do not match');
+        }
+    };
+</script>
+{% endblock script %}
+{% block content %}
 <body style="height: 100vh; display: flex; justify-content: center; align-items: center;">
     <form action="{{ url_for('register') }}" method="post" style="display: flex; flex-direction: column; gap: 1rem; width: 20rem;">
         <h1 style="margin: 0px auto;">Register</h1>
         <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" required>
         <input class="formInput" type="password" name="password1" id="password1" placeholder="Enter password" onChange="onChange()" required>
         <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm password" onChange="onChange()" required>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <span style="margin: auto;">{{messages[0][1]}}</span>
-        {% endif %}
-        {% endwith %}
         <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
         <span style="margin: auto;">Already have an account? <a href="/signin" style="margin: auto;">Sign in</a></span>
     </form>
 </body>
-</html>
+{% endblock content %}
