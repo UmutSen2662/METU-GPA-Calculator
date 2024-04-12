@@ -19,20 +19,20 @@ def calc_GPA():
             case "DD": return 1
             case "FD": return 0.5
         return 0
-    
+
     GPAs = []
     CGPAs = []
     total_grades = 0
     total_credits = 0
     for season in course_list:
-        grades = 0
-        credits = 0
+        current_grades = 0
+        current_credits = 0
         for course in season:
-            grades += grade_int(course["grade"]) * course["credit"]
-            credits += course["credit"]
-        total_grades += grades
-        total_credits += credits
-        gpa = ("%.2f" % (grades/credits)).rstrip('0').rstrip('.') if credits > 0 else ""
+            current_grades += grade_int(course["grade"]) * course["credit"]
+            current_credits += course["credit"]
+        total_grades += current_grades
+        total_credits += current_credits
+        gpa = ("%.2f" % (current_grades/current_credits)).rstrip('0').rstrip('.') if current_credits > 0 else ""
         cgpa = ("%.2f" % (total_grades/total_credits)).rstrip('0').rstrip('.') if total_credits > 0 else ""
         GPAs.append(gpa)
         CGPAs.append(cgpa)
@@ -48,6 +48,7 @@ def get_list():
             dict(id = course.id, name = course.name, credit = course.credit, grade = course.grade)
             for course in courses
         ])
+
 
 @app.route("/")
 def index():
@@ -70,7 +71,7 @@ def signin():
         if User.query.filter(User.email == email).first() is not None:
             password = request.form["password"]
             user = User.query.filter(User.email == email).first()
-            if user != None:
+            if user is not None:
                 if bcrypt.check_password_hash(user.password, password):
                     login_user(user)
                     return redirect(url_for("index"))
@@ -148,25 +149,25 @@ def add_course(season):
 
 
 @app.route("/delete_course/<int:id>", methods=["GET"])
-def delete_course(id):
-    Course.query.filter(Course.id == id).delete()
+def delete_course(cid):
+    Course.query.filter(Course.id == cid).delete()
     db.session.commit()
     return redirect(url_for("index"))
 
 
 @app.route("/change_course", methods=["POST"])
 def change_course():
-    id =  request.form["id"]
+    cid =  request.form["id"]
     value =  request.form["value"]
-    change = id[:1]
-    id = int(id[1:])
+    change = cid[0:1]
+    cid = int(cid[1:])
 
     if change == "i":
-        Course.query.filter(Course.id == id).update({Course.name: value})
+        Course.query.filter(Course.id == cid).update({Course.name: value})
     elif change == "c":
-        Course.query.filter(Course.id == id).update({Course.credit: value})
+        Course.query.filter(Course.id == cid).update({Course.credit: value})
     elif change == "g":
-        Course.query.filter(Course.id == id).update({Course.grade: value})
+        Course.query.filter(Course.id == cid).update({Course.grade: value})
     db.session.commit()
     get_list()
     return calc_GPA()
