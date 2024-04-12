@@ -74,6 +74,15 @@ function closeNav() {
     }
 };
 
+function openChange() {
+    const form = document.getElementById("change_password");
+    if (form.className == "passwordChangeForm") {
+        form.className += " display";
+    } else {
+        form.className = "passwordChangeForm";
+    }
+};
+
 function onChange() {
     const password = document.querySelector('input[name=password1]');
     const confirm = document.querySelector('input[name=password2]');
@@ -83,12 +92,3 @@ function onChange() {
         confirm.setCustomValidity('Passwords do not match');
     }
 };
-
-function openChange() {
-    const form = document.getElementById("change_password");
-    if (form.className == "passwordChangeForm") {
-        form.className += " display";
-    } else {
-        form.className = "passwordChangeForm";
-    }
-}

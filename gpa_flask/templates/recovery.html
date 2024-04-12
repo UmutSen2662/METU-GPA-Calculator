@@ -1,0 +1,24 @@
+{% extends 'layouts.html' %}
+{% block script %}
+<script>
+    function onChange() {
+        const password = document.querySelector('input[name=password1]');
+        const confirm = document.querySelector('input[name=password2]');
+        if (confirm.value === password.value) {
+            confirm.setCustomValidity('');
+        } else {
+            confirm.setCustomValidity('Passwords do not match');
+        }
+    };
+</script>
+{% endblock script %}
+{% block content %}
+<body style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+    <form action="{{ url_for('recovery') }}" method="post" style="display: flex; flex-direction: column; gap: 1rem; width: 20rem;">
+        <h1 style="margin: 0px auto;">Recover password</h1>
+        <input class="formInput" type="password" name="password1" id="password1" placeholder="Enter new password" onChange="onChange()" required>
+        <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm password" onChange="onChange()" required>
+        <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
+    </form>
+</body>
+{% endblock content %}
