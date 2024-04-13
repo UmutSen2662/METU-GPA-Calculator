@@ -1,13 +1,9 @@
-from flask import render_template, url_for, redirect, flash, request
+from flask import render_template, url_for, redirect, flash, request, session
 from flask_login import login_user, logout_user, current_user
 from gpa_flask.__init__ import app, db, bcrypt
 from gpa_flask.models import User, Course
 
-course_list = []
-current_year = 1
-years = 4
-
-def calc_GPA():
+def calc_GPA(course_list):
     def grade_int(grade):
         match grade:
             case "AA": return 4
@@ -40,24 +36,24 @@ def calc_GPA():
     return data
 
 def get_list():
-    global course_list
     course_list = []
-    for i in range(years * 3):
+    for i in range(session["years"] * 3):
         courses = Course.query.filter(Course.season == i, Course.user == current_user.id)
         course_list.append([
             dict(id = course.id, name = course.name, credit = course.credit, grade = course.grade)
             for course in courses
         ])
-
+    return course_list
 
 @app.route("/")
 def index():
     if not current_user.is_authenticated:
         return redirect(url_for("signin"))
-    global years
-    years = current_user.years
-    get_list()
-    return render_template("index.html", course_list = course_list, years = years, current_year = current_year, GPAs = calc_GPA())
+    if "current_year" not in session:
+        session["current_year"] = 1
+    session["years"] = current_user.years
+    course_list = get_list()
+    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"], GPAs = calc_GPA(course_list))
 
 
 @app.route("/signin", methods=["GET", "POST"])
@@ -128,23 +124,20 @@ def change_password():
 
 @app.route("/change_year/<int:year>", methods=["GET"])
 def change_year(year):
-    global current_year
-    current_year = year
+    session["current_year"] = year
     return "ok"
 
 
 @app.route("/edit_year/<int:value>", methods=["GET"])
 def edit_year(value):
-    global years
-    global current_year
-    if years > 1:
-        years += value - 2
-        if current_year > years:
-            current_year = years
-        current_user.years = years
+    if session["years"] > 1:
+        session["years"] += value - 2
+        if session["current_year"] > session["years"]:
+            session["current_year"] = session["years"]
+        current_user.years = session["years"]
         if value == 1:
             for i in range(3):
-                Course.query.filter(Course.season == (years * 3 + i), Course.user == current_user.id).delete()
+                Course.query.filter(Course.season == (session["years"] * 3 + i), Course.user == current_user.id).delete()
         db.session.commit()
     return redirect(url_for("index"))
 
@@ -178,5 +171,4 @@ def change_course():
     elif change == "g":
         Course.query.filter(Course.id == cid).update({Course.grade: value})
     db.session.commit()
-    get_list()
-    return calc_GPA()
+    return calc_GPA(get_list())
