@@ -157,7 +157,7 @@ def add_course(season):
     return redirect(url_for("index"))
 
 
-@app.route("/delete_course/<int:id>", methods=["GET"])
+@app.route("/delete_course/<int:cid>", methods=["GET"])
 def delete_course(cid):
     Course.query.filter(Course.id == cid).delete()
     db.session.commit()
