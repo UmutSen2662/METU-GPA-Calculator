@@ -53,15 +53,15 @@ def index():
         session["current_year"] = 1
     session["years"] = current_user.years
     course_list = get_list()
-    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"], GPAs = calc_GPA(course_list))
+    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"], GPAs = calc_GPA(course_list)), 200
 
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
     if request.method == "GET":
         if not current_user.is_authenticated:
-            return render_template("signin.html")
-        return redirect(url_for("index"))
+            return render_template("signin.html"), 200
+        return redirect(url_for("index")), 200
     else:
         email = request.form["email"]
         if User.query.filter(User.email == email).first() is not None:
@@ -70,17 +70,17 @@ def signin():
             if user is not None:
                 if bcrypt.check_password_hash(user.password, password):
                     login_user(user)
-                    return redirect(url_for("index"))
+                    return redirect(url_for("index")), 200
         flash("Email or password is incorrect!", "error")
-        return redirect(url_for("signin"))
+        return redirect(url_for("signin")), 200
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         if not current_user.is_authenticated:
-            return render_template("register.html")
-        return redirect(url_for("index"))
+            return render_template("register.html"), 200
+        return redirect(url_for("index")), 200
     else:
         email = request.form["email"]
         if User.query.filter(User.email == email).first() is not None:
@@ -91,22 +91,22 @@ def register():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        return redirect(url_for("index"))
+        return redirect(url_for("index")), 201
 
 
 @app.route("/signout")
 def signout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("index")), 200
 
 
 @app.route("/recovery_page", methods=["GET", "POST"])
 def recovery_page():
     if request.method == "GET":
-        return redirect(url_for("signin"))
+        return redirect(url_for("signin")), 200
     else:
         flash("Recovery email has been sent!", "info")
-        return redirect(url_for("signin"))
+        return redirect(url_for("signin")), 201
 
 
 @app.route("/change_password", methods=["POST"])
@@ -114,18 +114,18 @@ def change_password():
     password = request.form["password"]
     if not bcrypt.check_password_hash(current_user.password, password):
         flash("Incorrect password, password change is unsuccessful!", "error")
-        return redirect(url_for("index"))
+        return redirect(url_for("index")), 200
     hashed_password = bcrypt.generate_password_hash(request.form["password1"])
     User.query.filter(User.id == current_user.id).update({User.password: hashed_password})
     db.session.commit()
     flash("Password change successful!", "info")
-    return redirect(url_for("index"))
+    return redirect(url_for("index")), 201
 
 
 @app.route("/change_year/<int:year>", methods=["GET"])
 def change_year(year):
     session["current_year"] = year
-    return "ok"
+    return "", 204
 
 
 @app.route("/edit_year/<int:value>", methods=["GET"])
@@ -139,7 +139,7 @@ def edit_year(value):
             for i in range(3):
                 Course.query.filter(Course.season == (session["years"] * 3 + i), Course.user == current_user.id).delete()
         db.session.commit()
-    return redirect(url_for("index"))
+    return redirect(url_for("index")), 201
 
 
 @app.route("/add_course/<int:season>", methods=["GET"])
@@ -147,21 +147,21 @@ def add_course(season):
     course = Course(season=season, user=current_user.id)
     db.session.add(course)
     db.session.commit()
-    return redirect(url_for("index"))
+    return redirect(url_for("index")), 201
 
 
 @app.route("/delete_course/<int:cid>", methods=["GET"])
 def delete_course(cid):
     Course.query.filter(Course.id == cid).delete()
     db.session.commit()
-    return redirect(url_for("index"))
+    return redirect(url_for("index")), 201
 
 
 @app.route("/change_course", methods=["POST"])
 def change_course():
     cid =  request.form["id"]
     value =  request.form["value"]
-    change = cid[0:1]
+    change = cid[:1]
     cid = int(cid[1:])
 
     if change == "i":
@@ -171,4 +171,4 @@ def change_course():
     elif change == "g":
         Course.query.filter(Course.id == cid).update({Course.grade: value})
     db.session.commit()
-    return calc_GPA(get_list())
+    return calc_GPA(get_list()), 201
