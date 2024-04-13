@@ -75,7 +75,7 @@ def signin():
                 if bcrypt.check_password_hash(user.password, password):
                     login_user(user)
                     return redirect(url_for("index"))
-        flash("Email or password is incorrect!")
+        flash("Email or password is incorrect!", "error")
         return redirect(url_for("signin"))
 
 
@@ -88,7 +88,7 @@ def register():
     else:
         email = request.form["email"]
         if User.query.filter(User.email == email).first() is not None:
-            flash("Email already in use try logging in!")
+            flash("Email already in use try signing in!", "info")
             return redirect(url_for("signin"))
         hashed_password = bcrypt.generate_password_hash(request.form["password1"])
         user = User(email, hashed_password)
@@ -104,16 +104,25 @@ def signout():
     return redirect(url_for("index"))
 
 
+@app.route("/recovery_page", methods=["GET", "POST"])
+def recovery_page():
+    if request.method == "GET":
+        return redirect(url_for("signin"))
+    else:
+        flash("Recovery email has been sent!", "info")
+        return redirect(url_for("signin"))
+
+
 @app.route("/change_password", methods=["POST"])
 def change_password():
     password = request.form["password"]
     if not bcrypt.check_password_hash(current_user.password, password):
-        flash("Incorrect password, password change is unsuccessful!")
+        flash("Incorrect password, password change is unsuccessful!", "error")
         return redirect(url_for("index"))
     hashed_password = bcrypt.generate_password_hash(request.form["password1"])
     User.query.filter(User.id == current_user.id).update({User.password: hashed_password})
     db.session.commit()
-    flash("Password change successful!")
+    flash("Password change successful!", "info")
     return redirect(url_for("index"))
 
 

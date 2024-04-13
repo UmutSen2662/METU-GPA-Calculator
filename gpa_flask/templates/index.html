@@ -15,9 +15,9 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         </div>
         <a href="#" onclick="openChange()">Change Password</a>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(category_filter=["info", "error"]) %}
         {% if messages %}
-        <script> alert("{{messages[0][1]}}"); </script>
+        <script> alert("{{messages[0]}}"); </script>
         {% endif %}
         {% endwith %}
         <form class="passwordChangeForm" id="change_password" action="{{url_for('change_password')}}" method="post">
