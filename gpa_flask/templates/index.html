@@ -15,9 +15,9 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         </div>
         <a href="#" onclick="openChange()">Change Password</a>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(category_filter=["info", "error"]) %}
         {% if messages %}
-        <script> alert("{{messages[0][1]}}"); </script>
+        <script> alert("{{messages[0]}}"); </script>
         {% endif %}
         {% endwith %}
         <form class="passwordChangeForm" id="change_password" action="{{url_for('change_password')}}" method="post">
@@ -70,7 +70,7 @@
                 </div>
                 {% for course in course_list[season] %}
                 <div id="{{course['id']}}" class="course">        
-                    <form action=" {{ url_for('delete_course', id = course['id']) }} " method="get">
+                    <form action=" {{ url_for('delete_course', cid = course['id']) }} " method="get">
                         <button type="submit" class="deleteButton">X</button>
                     </form>
                     <span><input name="name" id="i{{course['id']}}" type="text" placeholder="Enter course Name" value="{{course['name']}}" list="courses" autocomplete="off"></span>

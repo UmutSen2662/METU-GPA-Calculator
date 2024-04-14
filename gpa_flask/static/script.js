@@ -1,19 +1,21 @@
 let timeout = null;
 let timeout2 = null;
 document.addEventListener("change", function(event) {
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-        if (event.target.id[0] == "c" & event.target.value == "") {
-            event.target.value = 0;
-        };
-        fetch("/change_course", {
-            method: "POST",
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: new URLSearchParams({'id': event.target.id, 'value': event.target.value})
-        }).then((res) => res.json()).then((GPAs) => {
-            writeGPA(GPAs);
-        });
-    }, 300);
+    if (event.target.className !== "formInput"){
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            if (event.target.id[0] == "c" & event.target.value == "") {
+                event.target.value = 0;
+            };
+            fetch("/change_course", {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({'id': event.target.id, 'value': event.target.value})
+            }).then((res) => res.json()).then((GPAs) => {
+                writeGPA(GPAs);
+            });
+        }, 300);
+    }
 }, false);
 
 fetch("https://raw.githubusercontent.com/UmutSen2662/METU-NCC-Course-Scraper/main/course_names.json").then((res) => res.json()).then(function (data) {

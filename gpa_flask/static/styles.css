@@ -23,6 +23,10 @@ body {
   font-family: Arial;
   padding: .8rem;
   margin: 0px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .banner{
