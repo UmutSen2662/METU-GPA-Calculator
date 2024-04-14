@@ -66,12 +66,14 @@ def signin():
         email = request.form["email"]
         user = User.query.filter(User.email == email).first()
         if user is not None:
-            password = request.form["password"]
-            if bcrypt.check_password_hash(user.password, password):
-                login_user(user)
-                return redirect(url_for("index"))
-        flash("Email or password is incorrect!", "error")
-        return redirect(url_for("signin"))
+            flash("Account does not exist, try registering.", "error")
+            return redirect(url_for("signin"))
+        password = request.form["password"]
+        if not bcrypt.check_password_hash(user.password, password):
+            flash("Password is incorrect!", "error")
+            return redirect(url_for("signin"))
+        login_user(user)
+        return redirect(url_for("index"))
 
 
 @app.route("/register", methods=["GET", "POST"])
