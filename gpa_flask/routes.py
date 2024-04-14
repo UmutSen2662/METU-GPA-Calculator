@@ -65,7 +65,7 @@ def signin():
     else:
         email = request.form["email"]
         user = User.query.filter(User.email == email).first()
-        if user is not None:
+        if user is None:
             flash("Account does not exist, try registering.", "error")
             return redirect(url_for("signin"))
         password = request.form["password"]
