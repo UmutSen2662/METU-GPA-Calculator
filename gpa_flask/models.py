@@ -26,7 +26,7 @@ class Course(db.Model):
     name = db.Column("name", db.Text, nullable = False)
     credit = db.Column("credit", db.Integer, nullable = False)
     grade = db.Column("grade", db.Text, nullable = False)
-    user = db.Column("User", db.ForeignKey("user.id"), nullable = False)
+    user = db.Column("user", db.ForeignKey("user.id"), nullable = False)
 
     def __init__(self, season, user):
         self.name = ""
