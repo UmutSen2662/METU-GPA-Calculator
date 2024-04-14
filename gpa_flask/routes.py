@@ -64,13 +64,12 @@ def signin():
         return redirect(url_for("index"))
     else:
         email = request.form["email"]
-        if User.query.filter(User.email == email).first() is not None:
+        user = User.query.filter(User.email == email).first()
+        if user is not None:
             password = request.form["password"]
-            user = User.query.filter(User.email == email).first()
-            if user is not None:
-                if bcrypt.check_password_hash(user.password, password):
-                    login_user(user)
-                    return redirect(url_for("index"))
+            if bcrypt.check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for("index"))
         flash("Email or password is incorrect!", "error")
         return redirect(url_for("signin"))
 
