@@ -69,7 +69,7 @@ def signin():
         if user is not None:
             password = request.form["password"]
             if bcrypt.check_password_hash(user.password, password):
-                login_user(user)
+                login_user(user, remember = True)
                 return redirect(url_for("index"))
         flash("The email and/or password do not match.", "error")
         return redirect(url_for("signin"))
