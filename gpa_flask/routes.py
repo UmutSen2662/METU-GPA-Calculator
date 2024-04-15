@@ -1,7 +1,8 @@
 from flask import render_template, url_for, redirect, flash, request, session
 from flask_login import login_user, logout_user, current_user
-from gpa_flask.__init__ import app, db, bcrypt
+from gpa_flask.__init__ import app, db, bcrypt, mail
 from gpa_flask.models import User, Course
+from flask_mail import Message
 
 def calc_GPA(course_list):
     def grade_int(grade):
@@ -65,15 +66,13 @@ def signin():
     else:
         email = request.form["email"]
         user = User.query.filter(User.email == email).first()
-        if user is None:
-            flash("Account does not exist, try registering.", "error")
-            return redirect(url_for("signin"))
-        password = request.form["password"]
-        if not bcrypt.check_password_hash(user.password, password):
-            flash("Password is incorrect!", "error")
-            return redirect(url_for("signin"))
-        login_user(user)
-        return redirect(url_for("index"))
+        if user is not None:
+            password = request.form["password"]
+            if bcrypt.check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for("index"))
+        flash("The email and/or password do not match.", "error")
+        return redirect(url_for("signin"))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -101,12 +100,43 @@ def signout():
     return redirect(url_for("index"))
 
 
+def send_mail(user):
+    token = user.get_token()
+    msg = Message("Password reset request", recipients = [user.email], sender="noreply@metugpaclaculator.com")
+    msg.body = f'''
+    To reset your password please follow the link below.
+
+    {url_for("reset_password", token = token, _external = True)}
+    If you did't send a password reset request, please ignore this message.
+    '''
+    mail.send(msg)
+
 @app.route("/recovery_page", methods=["GET", "POST"])
 def recovery_page():
     if request.method == "GET":
-        return redirect(url_for("signin"))
+        return render_template("recovery_page.html")
     else:
+        email = request.form["email"]
+        user = User.query.filter(User.email == email).first()
+        if user is not None:
+            send_mail(user)
         flash("Recovery email has been sent!", "info")
+        return redirect(url_for("signin"))
+
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    user = User.confirm_token(token)
+    if user is None:
+        flash("Token is invalid or expired! Please try again.", "error")
+        return redirect(url_for("recovery_page"))
+    if request.method == "GET":
+        return render_template("reset_password.html")
+    else:
+        hashed_password = bcrypt.generate_password_hash(request.form["password1"])
+        user.password = hashed_password
+        db.session.commit()
+        flash("Password changed succesfully", "info")
         return redirect(url_for("signin"))
 
 

@@ -1,5 +1,7 @@
-from gpa_flask.__init__ import db, login_manager
+from gpa_flask.__init__ import db, login_manager, app
+from datetime import datetime, timedelta, timezone
 from flask_login import UserMixin
+from jwt import encode, decode
 
 @login_manager.user_loader
 def load_user(id):
@@ -18,6 +20,31 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return self.id
+    
+    def get_token(self, expiration = 600):
+        reset_token = encode(
+            {
+                "user_id": self.id,
+                "exp": datetime.now(tz = timezone.utc) + timedelta(seconds = expiration)
+            },
+            app.config['SECRET_KEY'],
+            algorithm = "HS256"
+        )
+        return reset_token
+
+    @staticmethod
+    def confirm_token(token):
+        try:
+            data = decode(
+                token,
+                app.config['SECRET_KEY'],
+                leeway = timedelta(seconds = 10),
+                algorithms = ["HS256"]
+            )
+        except:
+            return None
+        return User.query.get(data["user_id"])
+
 
 class Course(db.Model):
     __tablename__ = "course"
