@@ -70,18 +70,28 @@ function openNav() {
 function closeNav() {
     document.getElementById("main").style.marginRight = "0";
     document.getElementById("mySidenav").style.width = "0";
-    const form = document.getElementById("change_password");
-    if (form.className == "passwordChangeForm display") {
-        form.className = "passwordChangeForm";
-    }
+    document.querySelectorAll('.display').forEach((elm) => {
+        elm.classList.remove("display");
+    })
 };
 
-function openChange() {
-    const form = document.getElementById("change_password");
-    if (form.className == "passwordChangeForm") {
-        form.className += " display";
+function toggleContainer(type) {
+    let container = null
+    switch (type) {
+        case "P":
+            container = document.getElementById("change_password");
+            break;
+        case "A":
+            container = document.getElementById("about_section");
+            break;
+        case "C":
+            container = document.getElementById("contact_section");
+            break;
+    }
+    if (container.classList.contains("display")){
+        container.classList.remove("display");
     } else {
-        form.className = "passwordChangeForm";
+        container.classList.add("display");    
     }
 };
 

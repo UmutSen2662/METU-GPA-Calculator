@@ -1,22 +1,10 @@
 {% extends 'layouts.html' %}
 {% block script %}
-<script>
-    function onChange() {
-        const password = document.querySelector('input[name=password1]');
-        const confirm = document.querySelector('input[name=password2]');
-        if (confirm.value === password.value) {
-            confirm.setCustomValidity('');
-        } else {
-            confirm.setCustomValidity('Passwords do not match');
-        }
-    };
-</script>
 {% with messages = get_flashed_messages(category_filter=["info"]) %}
 {% if messages %}
 <script> alert("{{messages[0]}}"); </script>
 {% endif %}
 {% endwith %}
-
 {% endblock script %}
 {% block content %}
 <body style="height: 90vh; display: flex; justify-content: center; align-items: center;">

@@ -1,6 +1,5 @@
 {% extends 'layouts.html' %}
 {% block script %}
-<script src="{{url_for('static', filename='script.js')}}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         writeGPA(JSON.parse(`{{ GPAs|safe }}`));
@@ -14,13 +13,13 @@
             <span style="margin-left: .8rem; font-size: large;">{{current_user.email}}</span>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         </div>
-        <a href="#" onclick="openChange()">Change Password</a>
         {% with messages = get_flashed_messages(category_filter=["info", "error"]) %}
         {% if messages %}
         <script> alert("{{messages[0]}}"); </script>
         {% endif %}
         {% endwith %}
-        <form class="passwordChangeForm" id="change_password" action="{{url_for('change_password')}}" method="post">
+        <a href="#" onclick="toggleContainer('P')">Change Password</a>
+        <form class="toggleContainer" id="change_password" action="{{url_for('change_password')}}" method="post">
             <div>
                 <input class="formInput" type="password" name="password" id="password" placeholder="Current password" required>
                 <input class="formInput" type="password" name="password1" id="password1" placeholder="New password" onChange="onChange()" required>
@@ -28,8 +27,22 @@
                 <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
             </div>
         </form>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="#" onclick="toggleContainer('A')">About</a>
+        <div class="toggleContainer" id="about_section">
+            <div class="multiline">
+                <p>Hi my name is Umut Şen and this website is made by me, a second year computer engineering student studying at METU NCC.</p>
+                <p>This website has been a real passion project for me because I have been using the ncclife version of this website since prep school, and I always wanted to make something similar myself.</p>
+                <p>If you have any questions or suggestion you can find my contact information below.</p>
+            </div>
+        </div>
+        <a href="#" onclick="toggleContainer('C')">Contact</a>
+        <div class="toggleContainer" id="contact_section">
+            <div class="multiline">
+                <p> Website email:<br>metugpaclaculator@gmail.com</p>
+                <p> Github profile: <br>github.com/UmutSen2662</p>
+                <p> Linkedin profile: <br>linkedin.com/in/umut-sen-2662-</p>
+            </div>
+        </div>
         <a href="/signout">Sign out</a>
     </div>
 

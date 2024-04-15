@@ -254,14 +254,14 @@ body {
   margin-top: 1rem;
   padding: 0px .8rem;
   text-decoration: none;
-  font-size: 25px;
+  font-size: x-large;
   display: block;
   transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  scale: .9;
+  scale: .92;
 }
 
 /* Position and style the close button (top right corner) */
@@ -270,7 +270,7 @@ body {
   top: 0;
   right: .6rem;
   margin-top: 1rem;
-  font-size: 36px;
+  font-size: xx-large;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -278,21 +278,27 @@ body {
   transition: margin-right .5s;
 }
 
-.passwordChangeForm {
+.toggleContainer {
   display: grid;
   grid-template-rows: 0fr;
   transition: 0.3s ease-out;
 }
-.passwordChangeForm.display {
+.toggleContainer.display {
   margin-top: 1rem;
   grid-template-rows: 1fr;
 }
-.passwordChangeForm > div {
+.toggleContainer > div {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 0px 2rem;
   gap: 1rem;
+}
+.multiline > p{
+  width: 100%;
+  margin: .1rem;
+  word-break: normal;
+  white-space: normal;
 }
 
 @media only screen and (max-aspect-ratio: 2/3) {

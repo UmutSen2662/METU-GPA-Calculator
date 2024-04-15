@@ -97,7 +97,8 @@ def register():
 @app.route("/signout")
 def signout():
     logout_user()
-    return redirect(url_for("index"))
+    flash("You have successfully signed out!", "info")
+    return redirect(url_for("signin"))
 
 
 def send_mail(user):
