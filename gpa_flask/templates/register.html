@@ -3,9 +3,9 @@
 <body style="height: 90vh; display: flex; justify-content: center; align-items: center;">
     <form action="{{ url_for('register') }}" method="post" style="display: flex; flex-direction: column; gap: 1rem; width: 20rem;">
         <h1 style="margin: 0px auto;">Register</h1>
-        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" required>
-        <input class="formInput" type="password" name="password1" id="password1" placeholder="Enter password" onChange="onChange()" required>
-        <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm password" onChange="onChange()" required>
+        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" maxlength="60" required>
+        <input class="formInput" type="password" name="password1" id="password1" placeholder="Enter password" onChange="onChange()" maxlength="60" required>
+        <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm password" onChange="onChange()" maxlength="60" required>
         <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
         <span style="margin: auto;">Already have an account? <a href="/signin" style="margin: auto;">Sign in</a></span>
     </form>

@@ -10,7 +10,7 @@
 <body style="height: 90vh; display: flex; justify-content: center; align-items: center;">
     <form action="{{ url_for('recovery_page') }}" method="post" style="display: flex; flex-direction: column; gap: 1rem; width: 20rem;">
         <h1 style="margin: 0px auto;">Reset password</h1>
-        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" required>
+        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" maxlength="60" required>
         <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
     </form>
 </body>

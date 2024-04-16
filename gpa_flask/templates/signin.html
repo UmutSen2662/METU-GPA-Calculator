@@ -10,8 +10,8 @@
 <body style="height: 90vh; display: flex; justify-content: center; align-items: center;">
     <form action="{{ url_for('signin') }}" method="post" style="display: flex; flex-direction: column; gap: 1rem; width: 20rem;">
         <h1 style="margin: 0px auto;">Sign in</h1>
-        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" required>
-        <input class="formInput" type="password" name="password" id="password" placeholder="Enter password" required>
+        <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" maxlength="60" required>
+        <input class="formInput" type="password" name="password" id="password" placeholder="Enter password" maxlength="60" required>
          {% with messages = get_flashed_messages(category_filter=["error"]) %}
          {% if messages %}
          <span style="margin: auto;">{{messages[0]}}</span>

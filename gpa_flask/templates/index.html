@@ -21,9 +21,9 @@
         <a href="#" onclick="toggleContainer('P')">Change Password</a>
         <form class="toggleContainer" id="change_password" action="{{url_for('change_password')}}" method="post">
             <div>
-                <input class="formInput" type="password" name="password" id="password" placeholder="Current password" required>
-                <input class="formInput" type="password" name="password1" id="password1" placeholder="New password" onChange="onChange()" required>
-                <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm new password" onChange="onChange()" required>
+                <input class="formInput" type="password" name="password" id="password" placeholder="Current password" maxlength="60" required>
+                <input class="formInput" type="password" name="password1" id="password1" placeholder="New password" onChange="onChange()" maxlength="60" required>
+                <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm new password" onChange="onChange()" maxlength="60" required>
                 <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
             </div>
         </form>
