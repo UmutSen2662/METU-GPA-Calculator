@@ -29,6 +29,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+.secondaryColorDiv {
+  background-color: var(--c1);
+  padding: 2.4rem 2rem;
+}
+
 .banner{
   display: flex;
   flex-wrap: wrap;
@@ -263,6 +268,10 @@ body {
 .sidenav a:hover {
   scale: .92;
 }
+.sidenav a:visited { text-decoration: none; color: inherit; }
+.sidenav a:hover { text-decoration: none; color: inherit; }
+.sidenav a:focus { text-decoration: none; color: inherit; }
+.sidenav a:hover, a:active { text-decoration: none; color: inherit }
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {

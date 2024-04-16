@@ -18,15 +18,6 @@ document.addEventListener("change", function(event) {
     }
 }, false);
 
-fetch("https://raw.githubusercontent.com/UmutSen2662/METU-NCC-Course-Scraper/main/course_names.json").then((res) => res.json()).then(function (data) {
-    const datalist = document.getElementById("courses");
-    data.forEach(function (course_name) {
-        const option = document.createElement("option");
-        option.value = course_name;
-        datalist.appendChild(option);
-    });
-});
-
 function writeGPA(GPAs){
     let i = 0;
     const displays = document.getElementsByClassName("GPADisplay");
