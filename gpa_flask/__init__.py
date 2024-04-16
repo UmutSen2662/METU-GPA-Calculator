@@ -3,7 +3,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask import Flask
-from os import system
+from os import popen
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.jinja_env.lstrip_blocks = True
@@ -17,7 +17,7 @@ SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostnam
     databasename="MetuGpaCalculato$default",
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-if system('hostname') == "TUF" or system('hostname') == 0:
+if popen('hostname').read() == "TUF\n":
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
