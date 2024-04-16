@@ -17,18 +17,24 @@ def calc_GPA(course_list):
             case "FD": return 0.5
         return 0
 
+    seen_list = []
     GPAs = []
     CGPAs = []
-    total_grades = 0
-    total_credits = 0
     for season in course_list:
+        total_grades = 0
+        total_credits = 0
         current_grades = 0
         current_credits = 0
         for course in season:
+            for old in seen_list:
+                if old["name"] == course["name"]:
+                    seen_list.remove(old)
+            seen_list.append(course)
             current_grades += grade_int(course["grade"]) * course["credit"]
             current_credits += course["credit"]
-        total_grades += current_grades
-        total_credits += current_credits
+        for course in seen_list:
+            total_grades += grade_int(course["grade"]) * course["credit"]
+            total_credits += course["credit"]
         gpa = ("%.2f" % (current_grades/current_credits)).rstrip('0').rstrip('.') if current_credits > 0 else ""
         cgpa = ("%.2f" % (total_grades/total_credits)).rstrip('0').rstrip('.') if total_credits > 0 else ""
         GPAs.append(gpa)
