@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask import Flask
+from os import system
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.jinja_env.lstrip_blocks = True
@@ -15,13 +16,15 @@ SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostnam
     hostname="MetuGpaCalculator.mysql.pythonanywhere-services.com",
     databasename="MetuGpaCalculato$default",
 )
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
-#app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,
-}
+if system('hostname') == "TUF" or system('hostname') == 0:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
