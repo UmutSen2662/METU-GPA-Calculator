@@ -59,7 +59,6 @@ function writeGPA(GPAs){
 function openTab(evt, tabName) {
     currentYear = document.getElementsByClassName("tablinks active")[0].innerText.slice(-1);
     newYear = tabName.slice(-1);
-    console.log("curr" + currentYear + "new" + newYear);
     if (currentYear == newYear)
         return;
 

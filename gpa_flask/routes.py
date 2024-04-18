@@ -211,9 +211,12 @@ def add_course(season):
 
 @app.route("/delete_course/<int:cid>", methods=["DELETE"])
 def delete_course(cid):
-    Course.query.filter(Course.id == cid).delete()
-    db.session.commit()
-    return ""
+    course = Course.query.filter(Course.id == cid).first()
+    if course.user == current_user.id:
+        Course.query.filter(Course.id == cid).delete()
+        db.session.commit()
+        return ""
+    return 500
 
 
 @app.route("/change_course", methods=["POST"])
