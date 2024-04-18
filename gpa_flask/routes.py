@@ -1,6 +1,6 @@
 from flask import render_template, url_for, redirect, flash, request, session
-from flask_login import login_user, logout_user, current_user
-from gpa_flask.__init__ import app, db, bcrypt, mail
+from flask_login import login_user, logout_user, login_required, current_user
+from gpa_flask.__init__ import app, db, bcrypt, mail, unauthorized_handler
 from gpa_flask.models import User, Course
 from flask_mail import Message
 
@@ -53,9 +53,8 @@ def get_list():
     return course_list
 
 @app.route("/")
+@login_required
 def index():
-    if not current_user.is_authenticated:
-        return redirect(url_for("signin"))
     if "current_year" not in session:
         session["current_year"] = 1
     session["years"] = current_user.years
@@ -64,6 +63,7 @@ def index():
 
 
 @app.route("/signin", methods=["GET", "POST"])
+@unauthorized_handler
 def signin():
     if request.method == "GET":
         if not current_user.is_authenticated:
@@ -101,6 +101,7 @@ def register():
 
 
 @app.route("/signout")
+@login_required
 def signout():
     logout_user()
     flash("You have successfully signed out!", "info")
@@ -148,6 +149,7 @@ def reset_password(token):
 
 
 @app.route("/change_password", methods=["POST"])
+@login_required
 def change_password():
     password = request.form["password"]
     if not bcrypt.check_password_hash(current_user.password, password):
@@ -161,12 +163,14 @@ def change_password():
 
 
 @app.route("/change_year/<int:year>", methods=["GET"])
+@login_required
 def change_year(year):
     session["current_year"] = year
     return ""
 
 
 @app.route("/edit_year/<int:value>", methods=["GET"])
+@login_required
 def edit_year(value):
     if session["years"] > 1:
         session["years"] += value - 2
@@ -181,6 +185,7 @@ def edit_year(value):
 
 
 @app.route("/add_course/<int:season>", methods=["GET"])
+@login_required
 def add_course(season):
     course = Course(season=season, user=current_user.id)
     db.session.add(course)
@@ -210,6 +215,7 @@ def add_course(season):
 
 
 @app.route("/delete_course/<int:cid>", methods=["DELETE"])
+@login_required
 def delete_course(cid):
     course = Course.query.filter(Course.id == cid).first()
     if course.user == current_user.id:
@@ -220,6 +226,7 @@ def delete_course(cid):
 
 
 @app.route("/change_course", methods=["POST"])
+@login_required
 def change_course():
     cid =  request.form["id"]
     value =  request.form["value"]
@@ -237,5 +244,6 @@ def change_course():
 
 
 @app.route("/get_gpa", methods=["get"])
+@login_required
 def get_gpa():
     return calc_GPA(get_list())
