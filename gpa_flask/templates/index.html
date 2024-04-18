@@ -6,16 +6,16 @@
 {% block content %}
 <body id="main" data-color-mode="auto">
     <div id="mySidenav" class="sidenav">
-        <div>
+        <div style="display: flex; align-items: center;">
             <span style="margin-left: .8rem; font-size: large;">{{current_user.email}}</span>
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <span class="closebtn" onclick="closeNav()">X</span>
         </div>
         {% with messages = get_flashed_messages(category_filter=["info", "error"]) %}
         {% if messages %}
         <script> alert("{{messages[0]}}"); </script>
         {% endif %}
         {% endwith %}
-        <a href="#" onclick="toggleContainer('P')">Change Password</a>
+        <span class="sidebarText" onclick="toggleContainer('P')">Change Password</span>
         <form class="toggleContainer" id="change_password" action="{{url_for('change_password')}}" method="post">
             <div>
                 <input class="formInput" type="password" name="password" id="password" placeholder="Current password" maxlength="60" required>
@@ -24,7 +24,7 @@
                 <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Submit</button>
             </div>
         </form>
-        <a href="#" onclick="toggleContainer('A')">About</a>
+        <span class="sidebarText" onclick="toggleContainer('A')">About</span>
         <div class="toggleContainer" id="about_section">
             <div class="multiline">
                 <p>Hi my name is Umut Şen and this website is made by me, a second year computer engineering student studying at METU NCC.</p>
@@ -32,7 +32,7 @@
                 <p>If you have any questions or suggestion you can find my contact information below.</p>
             </div>
         </div>
-        <a href="#" onclick="toggleContainer('C')">Contact</a>
+        <span class="sidebarText" onclick="toggleContainer('C')">Contact</span>
         <div class="toggleContainer" id="contact_section">
             <div class="multiline">
                 <p> Website email:<br>metugpaclaculator@gmail.com</p>
@@ -40,7 +40,7 @@
                 <p> Linkedin profile: <br>linkedin.com/in/umut-sen-2662-</p>
             </div>
         </div>
-        <a href="/signout">Sign out</a>
+        <a class="sidebarText" href="/signout">Sign out</a>
     </div>
 
     <datalist id="courses"></datalist>

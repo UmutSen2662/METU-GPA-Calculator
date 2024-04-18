@@ -156,6 +156,14 @@ body {
   background-color: var(--c2);
 }
 
+.sortable_list li p{
+  margin: auto 0px;
+  margin-left: auto;
+  margin-right: .6rem;
+  text-align: center;
+  font-size: large;
+}
+
 .sortable_list li{
   display: flex;
   flex-direction: row;
@@ -184,14 +192,6 @@ body {
   transform: scale(.95);
   outline: 0px;
   background-color: var(--c6);
-}
-
-.sortable_list li p{
-  margin: auto 0px;
-  margin-left: auto;
-  margin-right: .6rem;
-  text-align: center;
-  font-size: large;
 }
 
 .yearButtons {
@@ -250,36 +250,41 @@ body {
   right: 0;
   background-color: var(--c1); /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 1.6rem; /* Place content 60px from the top */
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  padding-top: 1.8rem; /* Offset content from the top */
+  transition: 0.5s; /* seconds to transition the sidenav */
 }
 
-/* The navigation menu links */
-.sidenav a {
+/* The navigation menu options */
+.sidebarText {
   margin-top: 1rem;
   padding: 0px .8rem;
   text-decoration: none;
   font-size: x-large;
   display: block;
   transition: 0.3s;
+  cursor: pointer;
+  user-select: none;
 }
 
-/* When you mouse over the navigation links, change their color */
-.sidenav a:hover {
+/* When you mouse over the navigation options, change their color */
+.sidebarText:visited { text-decoration: none; color: inherit; }
+.sidebarText:focus { text-decoration: none; color: inherit; }
+.sidebarText:active { text-decoration: none; color: inherit; }
+.sidebarText:hover {
+  text-decoration: none;
+  color: inherit; 
   scale: .92;
 }
-.sidenav a:visited { text-decoration: none; color: inherit; }
-.sidenav a:hover { text-decoration: none; color: inherit; }
-.sidenav a:focus { text-decoration: none; color: inherit; }
-.sidenav a:hover, a:active { text-decoration: none; color: inherit }
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: .6rem;
-  margin-top: 1rem;
-  font-size: xx-large;
+  margin: 0px .6rem;
+  margin-left: auto;
+  padding: 0px .6rem;
+  font-size: large;
+  font-weight: bolder;
+  cursor: pointer;
+  user-select: none;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
