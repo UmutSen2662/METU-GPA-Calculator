@@ -1,22 +1,49 @@
 let timeout = null;
 let timeout2 = null;
-document.addEventListener("change", function(event) {
-    if (event.target.className !== "formInput"){
-        clearTimeout(timeout);
-        timeout = setTimeout(function () {
-            if (event.target.id[0] == "c" & event.target.value == "") {
-                event.target.value = 0;
-            };
-            fetch("/change_course", {
-                method: "POST",
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams({'id': event.target.id, 'value': event.target.value})
-            }).then((res) => res.json()).then((GPAs) => {
-                writeGPA(GPAs);
+let timeout3 = null;
+
+function indexEventListeners(){
+    document.addEventListener("change", function(event) {
+        if (event.target.className !== "formInput"){
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                if (event.target.id[0] == "c" & event.target.value == "") {
+                    event.target.value = 0;
+                };
+                fetch("/change_course", {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: new URLSearchParams({'id': event.target.id, 'value': event.target.value})
+                }).then((res) => res.json()).then((data) => {
+                    writeGPA(data);
+                });
+            }, 300);
+        }
+    }, false);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch("/get_gpa").then((res) => res.json()).then((data) => {
+            writeGPA(data);
+        });
+        fetch("https://raw.githubusercontent.com/UmutSen2662/METU-NCC-Course-Scraper/main/course_names.json").then((res) => res.json()).then(function (data) {
+            const datalist = document.getElementById("courses");
+            data.forEach(function (course_name) {
+                const option = document.createElement("option");
+                option.value = course_name;
+                datalist.appendChild(option);
             });
-        }, 300);
-    }
-}, false);
+        });
+    }, false);
+
+    document.addEventListener("htmx:afterRequest", function() {
+        clearTimeout(timeout3);
+        timeout3 = setTimeout(function () {
+            fetch("/get_gpa").then((res) => res.json()).then((data) => {
+                writeGPA(data);
+            });
+        }, 500);
+    }, false);
+};
 
 function writeGPA(GPAs){
     let i = 0;
@@ -30,9 +57,15 @@ function writeGPA(GPAs){
 };
 
 function openTab(evt, tabName) {
+    currentYear = document.getElementsByClassName("tablinks active")[0].innerText.slice(-1);
+    newYear = tabName.slice(-1);
+    console.log("curr" + currentYear + "new" + newYear);
+    if (currentYear == newYear)
+        return;
+
     clearTimeout(timeout2);
     timeout2 = setTimeout(function () {
-        fetch("/change_year/" + tabName.slice(-1));
+        fetch("/change_year/" + newYear);
     }, 100);
 
     let i, tabcontent, tablinks;

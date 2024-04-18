@@ -163,7 +163,7 @@ def change_password():
 @app.route("/change_year/<int:year>", methods=["GET"])
 def change_year(year):
     session["current_year"] = year
-    return "", 204
+    return ""
 
 
 @app.route("/edit_year/<int:value>", methods=["GET"])
@@ -185,14 +185,35 @@ def add_course(season):
     course = Course(season=season, user=current_user.id)
     db.session.add(course)
     db.session.commit()
-    return redirect(url_for("index"))
+    return f"""
+    <div id="{course.id}" class="course">
+        <button class="deleteButton" hx-delete="/delete_course/{course.id}" hx-swap="outerHTML" hx-target="closest .course">X</button>
+        <span><input name="name" id="i{course.id}" type="text" placeholder="Enter course Name" value="" list="courses" autocomplete="off"></span>
+        <span><input name="credit" id="c{course.id}" type="number" style="text-align: center;" min="0" value="0" onclick="this.select()" autocomplete="off"></span>
+        <select name="grade" id="g{course.id}">
+            <option value="XX" selected>XX</option>
+            <option value="AA">AA</option>
+            <option value="BA">BA</option>
+            <option value="BB">BB</option>
+            <option value="CB">CB</option>
+            <option value="CC">CC</option>
+            <option value="DC">DC</option>
+            <option value="DD">DD</option>
+            <option value="FD">FD</option>
+            <option value="FF">FF</option>
+            <option value="NA">NA</option>
+            <option value="S">S</option>
+            <option value="U">U</option>
+        </select>
+    </div>
+    """
 
 
-@app.route("/delete_course/<int:cid>", methods=["GET"])
+@app.route("/delete_course/<int:cid>", methods=["DELETE"])
 def delete_course(cid):
     Course.query.filter(Course.id == cid).delete()
     db.session.commit()
-    return redirect(url_for("index"))
+    return ""
 
 
 @app.route("/change_course", methods=["POST"])
@@ -209,4 +230,9 @@ def change_course():
     elif change == "g":
         Course.query.filter(Course.id == cid).update({Course.grade: value})
     db.session.commit()
+    return calc_GPA(get_list())
+
+
+@app.route("/get_gpa", methods=["get"])
+def get_gpa():
     return calc_GPA(get_list())
