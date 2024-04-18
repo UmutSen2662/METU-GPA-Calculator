@@ -17,14 +17,13 @@ SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostnam
     databasename="MetuGpaCalculato$default",
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
+}
 if popen('hostname').read() == "TUF\n":
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
-else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-        "pool_pre_ping": True,
-        "pool_recycle": 280,
-    }
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
