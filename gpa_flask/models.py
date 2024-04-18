@@ -56,8 +56,8 @@ class Course(db.Model):
     user = db.Column("user", db.ForeignKey("user.id"), nullable = False)
 
     def __init__(self, season, user):
+        self.season = season
         self.name = ""
         self.credit = 0
         self.grade = "XX"
-        self.season = season
         self.user = user
