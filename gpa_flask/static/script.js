@@ -57,14 +57,14 @@ function writeGPA(GPAs){
 };
 
 function openTab(evt, tabName) {
-    currentYear = document.getElementsByClassName("tablinks active")[0].innerText.slice(-1);
-    newYear = tabName.slice(-1);
+    currentYear = document.getElementsByClassName("tablinks active")[0].innerText;
+    newYear = tabName;
     if (currentYear == newYear)
         return;
 
     clearTimeout(timeout2);
     timeout2 = setTimeout(function () {
-        fetch("/change_year/" + newYear);
+        fetch("/change_year/" + newYear.replace("Year ", ""));
     }, 100);
 
     let i, tabcontent, tablinks;
