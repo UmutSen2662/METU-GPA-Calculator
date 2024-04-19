@@ -28,6 +28,7 @@ if popen('hostname').read() == "TUF\n":
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+unauthorized_handler = login_manager.unauthorized_handler
 
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
