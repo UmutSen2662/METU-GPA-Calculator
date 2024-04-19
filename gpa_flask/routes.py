@@ -236,7 +236,7 @@ def change_course():
     if change == "i":
         Course.query.filter(Course.id == cid).update({Course.name: value})
     elif change == "c":
-        Course.query.filter(Course.id == cid).update({Course.credit: value})
+        Course.query.filter(Course.id == cid).update({Course.credit: (value if value > 0 else 0)})
     elif change == "g":
         Course.query.filter(Course.id == cid).update({Course.grade: value})
     db.session.commit()
