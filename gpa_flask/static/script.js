@@ -7,7 +7,7 @@ function indexEventListeners(){
         if (event.target.className !== "formInput"){
             clearTimeout(timeout);
             timeout = setTimeout(function () {
-                if (event.target.id[0] == "c" & event.target.value == "") {
+                if ((event.target.id[0] == "c" & event.target.value == "") | parseInt(event.target.value) < 0) {
                     event.target.value = 0;
                 };
                 fetch("/change_course", {
