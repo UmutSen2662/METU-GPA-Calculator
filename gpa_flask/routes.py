@@ -59,7 +59,7 @@ def index():
         session["current_year"] = 1
     session["years"] = current_user.years
     course_list = get_list()
-    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"], GPAs = calc_GPA(course_list))
+    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"])
 
 
 @app.route("/signin", methods=["GET", "POST"])
