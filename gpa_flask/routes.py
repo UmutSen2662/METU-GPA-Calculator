@@ -26,13 +26,14 @@ def calc_GPA(course_list):
         current_grades = 0
         current_credits = 0
         for course in season:
-            if course["name"] != "":
-                for old in seen_list:
-                    if old["name"] == course["name"]:
-                        seen_list.remove(old)
-            seen_list.append(course)
-            current_grades += grade_int(course["grade"]) * course["credit"]
-            current_credits += course["credit"]
+            if course["grade"] != "XX":
+                if course["name"] != "":
+                    for old in seen_list:
+                        if old["name"] == course["name"]:
+                            seen_list.remove(old)
+                seen_list.append(course)
+                current_grades += grade_int(course["grade"]) * course["credit"]
+                current_credits += course["credit"]
         for course in seen_list:
             total_grades += grade_int(course["grade"]) * course["credit"]
             total_credits += course["credit"]
