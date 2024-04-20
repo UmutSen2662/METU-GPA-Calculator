@@ -7,9 +7,13 @@ function indexEventListeners(){
         if (event.target.className !== "formInput"){
             clearTimeout(timeout);
             timeout = setTimeout(function () {
-                if ((event.target.id[0] == "c" & event.target.value == "") | parseInt(event.target.value) < 0) {
-                    event.target.value = 0;
-                };
+                if (event.target.id[0] == "c"){
+                    if (event.target.value == "", event.target.validity.rangeUnderflow){
+                        event.target.value = 0;
+                    } else if (event.target.validity.rangeOverflow){
+                        event.target.value = 10;
+                    }
+                }
                 fetch("/change_course", {
                     method: "POST",
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},

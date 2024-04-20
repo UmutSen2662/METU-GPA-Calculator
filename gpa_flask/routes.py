@@ -15,6 +15,7 @@ def calc_GPA(course_list):
             case "DC": return 1.5
             case "DD": return 1
             case "FD": return 0.5
+            case "S": return 4
         return 0
 
     seen_list = []
@@ -196,7 +197,7 @@ def add_course(season):
     <div id="{course.id}" class="course">
         <button class="deleteButton" hx-delete="/delete_course/{course.id}" hx-swap="outerHTML" hx-target="closest .course">X</button>
         <span><input name="name" id="i{course.id}" type="text" placeholder="Enter course Name" value="" list="courses" autocomplete="off"></span>
-        <span><input name="credit" id="c{course.id}" type="number" style="text-align: center;" min="0" value="0" onclick="this.select()" autocomplete="off"></span>
+        <span><input name="credit" id="c{course.id}" type="number" style="text-align: center;" min="0" max="10" value="0" onclick="this.select()" autocomplete="off"></span>
         <select name="grade" id="g{course.id}">
             <option value="XX" selected>XX</option>
             <option value="AA">AA</option>
