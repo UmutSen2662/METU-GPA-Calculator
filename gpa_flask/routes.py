@@ -175,7 +175,7 @@ def change_year(year):
 @app.route("/edit_year/<int:value>", methods=["GET"])
 @login_required
 def edit_year(value):
-    if session["years"] > 1:
+    if (session["years"] > 1 or value == 3) and (session["years"] < 12 or value == 1):
         session["years"] += value - 2
         if session["current_year"] > session["years"]:
             session["current_year"] = session["years"]
