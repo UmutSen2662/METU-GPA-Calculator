@@ -3,6 +3,7 @@ let timeout2 = null;
 let timeout3 = null;
 
 function indexEventListeners(){
+    // listen for changes to courses and update values after delay
     document.addEventListener("change", function(event) {
         if (event.target.className !== "formInput"){
             clearTimeout(timeout);
@@ -25,6 +26,7 @@ function indexEventListeners(){
         }
     }, false);
 
+    // at page load fetch gpa values from server, then fetch course names from my github
     document.addEventListener("DOMContentLoaded", function() {
         fetch("/get_gpa").then((res) => res.json()).then((data) => {
             writeGPA(data);
@@ -39,6 +41,7 @@ function indexEventListeners(){
         });
     }, false);
 
+    // listen to htmx requests and update gpa values after delay
     document.addEventListener("htmx:afterRequest", function() {
         clearTimeout(timeout3);
         timeout3 = setTimeout(function () {

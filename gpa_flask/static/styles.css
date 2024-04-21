@@ -242,19 +242,18 @@ body {
 .sidenav {
   display: flex;
   flex-direction: column;
-  height: 100%; /* 100% Full-height */
-  width: 0; /* 0 width - change this with JavaScript */
-  position: fixed; /* Stay in place */
+  height: 100%;
+  width: 0;
+  position: fixed;
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
-  background-color: var(--c1); /* Black*/
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 1.8rem; /* Offset content from the top */
-  transition: 0.5s; /* seconds to transition the sidenav */
+  background-color: var(--c1);
+  overflow-x: hidden;
+  padding-top: 1.8rem;
+  transition: 0.5s;
 }
 
-/* The navigation menu options */
 .sidebarText {
   margin-top: 1rem;
   padding: 0px .8rem;
@@ -265,8 +264,6 @@ body {
   cursor: pointer;
   user-select: none;
 }
-
-/* When you mouse over the navigation options, change their color */
 .sidebarText:visited { text-decoration: none; color: inherit; }
 .sidebarText:focus { text-decoration: none; color: inherit; }
 .sidebarText:active { text-decoration: none; color: inherit; }
@@ -276,7 +273,6 @@ body {
   scale: .92;
 }
 
-/* Position and style the close button (top right corner) */
 .sidenav .closebtn {
   margin: 0px .6rem;
   margin-left: auto;
@@ -287,7 +283,6 @@ body {
   user-select: none;
 }
 
-/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
   transition: margin-right .5s;
 }
