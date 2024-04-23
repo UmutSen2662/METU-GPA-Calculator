@@ -252,9 +252,9 @@ def get_gpa():
     return calc_GPA(get_list())
 
 
-@app.route("/terms_and_conditions", methods=["get"])
-def terms_and_conditions():
-    return render_template("terms_and_conditions.html")
+@app.route("/terms_of_service", methods=["get"])
+def terms_of_service():
+    return render_template("terms_of_service.html")
 
 
 @app.route("/privacy_policy", methods=["get"])
