@@ -250,3 +250,13 @@ def change_course():
 @login_required
 def get_gpa():
     return calc_GPA(get_list())
+
+
+@app.route("/terms_and_conditions", methods=["get"])
+def terms_and_conditions():
+    return render_template("terms_and_conditions.html")
+
+
+@app.route("/privacy_policy", methods=["get"])
+def privacy_policy():
+    return render_template("privacy_policy.html")
