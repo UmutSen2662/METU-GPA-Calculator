@@ -6,8 +6,8 @@
 {% block content %}
 <body id="main" data-color-mode="auto">
     <div id="mySidenav" class="sidenav">
-        <div style="display: flex; align-items: center;">
-            <span style="margin-left: .8rem; font-size: large;">{{current_user.email}}</span>
+        <div style="display: flex; align-items: center; font-size: large; padding-left: var(--m);">
+            <span>{{current_user.email}}</span>
             <span class="closebtn" onclick="closeNav()">X</span>
         </div>
         {% with messages = get_flashed_messages(category_filter=["info", "error"]) %}
@@ -46,7 +46,7 @@
     <datalist id="courses"></datalist>
     <header class="banner">
         <h1>METU GPA Calculator</h1>
-        <div style="padding: .6rem; width: 3rem;">
+        <div style="padding: var(--s); width: var(--xl);">
             <button class="secondaryColorBtn" onclick="openNav()">&equals;</button>
         </div>
     </header>
@@ -71,7 +71,7 @@
             {% for season_name in ["Fall", "Spring", "Summer"] %}
             {% set season = (3 * i + loop.index - 1) %}
             <ul id="season {{season}}" class="sortable_list">
-                <h2 style="text-align: center; margin: 0px; margin-top: 8px;">{{season_name}}</h2>
+                <h2 style="text-align: center; margin: 0px; margin-top: var(--s);">{{season_name}} <hr> </h2>
                 <div>
                     <span style="padding-left: 12px;">#</span>
                     <span style="font-size: large; padding-left: 2px;">Course Names</span>
@@ -105,7 +105,7 @@
     </div>
 
     <div class="bottomBar">
-        <span id="CGPADisplay" style="margin: auto .6rem; font-size: larger;"> CUMULATIVE GPA :</span>
+        <span id="CGPADisplay" style="margin: auto var(--s); font-size: larger;"> CUMULATIVE GPA :</span>
 
         <div class="yearButtons">
             <form action=" {{ url_for('edit_year', value = 3) }} " method="get">
