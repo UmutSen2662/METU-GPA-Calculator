@@ -331,6 +331,10 @@ body {
   z-index: 1; /* Stay on top */
 }
 
+input[type="checkbox"] {
+  accent-color: var(--c4);
+}
+
 @media only screen and (max-aspect-ratio: 2/3) {
   /* For mobile phones: */
   .banner h1{

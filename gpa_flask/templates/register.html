@@ -7,6 +7,7 @@
             <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" maxlength="60" required>
             <input class="formInput" type="password" name="password1" id="password1" placeholder="Enter password" onChange="onChange()" maxlength="60" required>
             <input class="formInput" type="password" name="password2" id="password2" placeholder="Confirm password" onChange="onChange()" maxlength="60" required>
+            <label for="terms_of_service" style="font-size: small; user-select: none;"> <input type="checkbox" name="terms_of_service" id="terms_of_service" style="color: var(--c1);" required> I have read and agree to the <a href="{{ url_for('terms_of_service') }}" target="_blank">Terms of Service</a></label>
             <button class="primaryColorBtn" type="submit" style="margin: auto; width: 50%;">Register</button>
             <span style="margin: auto;">Already have an account? <a href="/signin" style="margin: auto;">Sign in</a></span>
         </form>

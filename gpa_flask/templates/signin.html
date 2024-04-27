@@ -13,15 +13,16 @@
             <h1 style="margin: 0px auto;">Sign in</h1>
             <input class="formInput" type="email" name="email" id="email" placeholder="Enter email" maxlength="60" required>
             <input class="formInput" type="password" name="password" id="password" placeholder="Enter password" maxlength="60" required>
+            <div style="display: flex;">
+                <label style="user-select: none;"> <input type="checkbox" name="remember" id="remember" style="color: var(--c1);"> Keep me signed in</label>
+                <a href="/recovery_page" style="color: gray; margin-left: auto;">Forgot password?</a>
+            </div>
             {% with messages = get_flashed_messages(category_filter=["error"]) %}
             {% if messages %}
             <span style="margin: auto;">{{messages[0]}}</span>
             {% endif %}
             {% endwith %}
-            <div style="display: flex; justify-content: left; align-items: center; padding: 0px;">
-                <button class="primaryColorBtn" type="submit" style="margin: 0px; width: 50%;">Sign in</button>
-                <a href="/recovery_page" style="color: gray; margin: auto;">Forgot password?</a>
-            </div>
+            <button class="primaryColorBtn" type="submit" style="margin: 0px; width: 50%; margin: auto;">Sign in</button>
             <span style="margin: auto;">Don't have an account? <a href="/register" style="margin: auto;">Register</a></span>
         </form>
     </div>
