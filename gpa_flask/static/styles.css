@@ -6,7 +6,7 @@
   --c4: rgb(80, 100, 220);
   --c5: rgb(60, 75, 170);
   --c6: rgb(50, 60, 140);
-
+  
   --xxs: .236rem;
   --xs: .382rem;
   --s: .618rem;
@@ -84,11 +84,11 @@ body {
 }
 
 .tabcontent {
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: var(--m);
   padding: var(--m) 0px;
   border-top: none;
-  min-height: 200px;
+  min-height: 12rem;
 }
 
 .sortable_list{
@@ -104,9 +104,10 @@ body {
 
 .sortable_list div{
   display: grid;
-  gap: var(--s);
-  margin: 0px var(--s);
-  grid-template-columns: 2rem 1fr 3rem 3rem;
+  gap: var(--xs);
+  margin-left: var(--xs);
+  margin-right: var(--s);
+  grid-template-columns: 2.2rem 1fr 3.2rem 3.2rem;
 }
 
 .sortable_list span{
@@ -116,33 +117,34 @@ body {
 
 .sortable_list input{
   width: 100%;
-  min-height: 2rem;
   font-size: large;
-  padding-left: var(--xs);
-  border: 0px;
+  padding: var(--xs);
+  outline: 0px;
+  border: 2px solid transparent;
   background-color: var(--c1);
 }
 .sortable_list input:focus{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 .sortable_list input:hover{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 
 .deleteButton{
   width: 100%;
   height: 100%;
-  border: 0px;
+  outline: 0px;
+  border: 2px solid transparent;
   background-color: var(--c1);
 }
 .deleteButton:hover{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 .deleteButton:focus{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 .deleteButton:active{
@@ -152,16 +154,16 @@ body {
 
 .sortable_list select{
   font-size: medium;
-  border: 0px;
-  outline: 2px solid var(--c1);
+  outline: 0px;
+  border: 2px solid transparent;
   background-color: var(--c1);
 }
 .sortable_list select:hover{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 .sortable_list select:focus{
-  outline: 2px solid var(--c4);
+  border: 2px solid var(--c4);
   background-color: var(--c2);
 }
 
@@ -184,22 +186,19 @@ body {
   padding: var(--s);
   min-height: 2rem;
   margin-left: var(--s);
-  transition: 0.3s;
+  transition: 0.2s;
   font-size: large;
   color: #fff;
   background-color: var(--c4);
 }
 .primaryColorBtn:hover{
-  outline: 0px;
   background-color: var(--c5);
 }
 .primaryColorBtn:focus{
-  outline: 0px;
   background-color: var(--c5);
 }
 .primaryColorBtn:active{
   transform: scale(.95);
-  outline: 0px;
   background-color: var(--c6);
 }
 
@@ -208,15 +207,16 @@ body {
   grid-template-columns: 1fr 1fr;
   margin-left: auto;
   gap: var(--s);
-  width: 22%;
+  width: 20rem;
 }
 
 .secondaryColorBtn {
   width: 100%;
-  border: none;
+  border: 0px;
+  outline: 0px;
   cursor: pointer;
   font-size: large;
-  transition: 0.3s;
+  transition: 0.2s;
   padding: var(--s) 0px;
   background-color: var(--c1);
 }
@@ -224,7 +224,6 @@ body {
   background-color: var(--c2);
 }
 .secondaryColorBtn:focus {
-  outline: 0px;
   background-color: var(--c2);
 }
 .secondaryColorBtn:active {
@@ -242,8 +241,9 @@ body {
 }
 
 .formInput {
-  font-size: large;
+  outline: 0px;
   padding: var(--xs);
+  font-size: large;
   color: #000
 }
 
@@ -279,7 +279,7 @@ body {
 .sidebarText:hover {
   text-decoration: none;
   color: inherit; 
-  scale: .92;
+  scale: .95;
 }
 
 .sidenav .closebtn {
@@ -293,7 +293,7 @@ body {
 }
 
 #main {
-  transition: margin-right .5s;
+  transition: margin-right 0.5s;
 }
 
 .toggleContainer {
@@ -331,9 +331,9 @@ body {
   z-index: 1; /* Stay on top */
 }
 
-input[type="checkbox"] {
-  accent-color: var(--c4);
-}
+input[type="checkbox"] { accent-color: var(--c4); }
+
+hr { margin-bottom: var(--xxs); }
 
 @media only screen and (max-aspect-ratio: 2/3) {
   /* For mobile phones: */
