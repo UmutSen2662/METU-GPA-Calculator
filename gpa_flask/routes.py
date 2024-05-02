@@ -119,6 +119,7 @@ def send_mail(user):
     To reset your password please follow the link below.
 
     {url_for("reset_password", token = token, _external = True)}
+    
     If you did't send a password reset request, please ignore this message.
     '''
     mail.send(msg)
