@@ -46,6 +46,16 @@ class User(db.Model, UserMixin):
         return User.query.get(data["user_id"])
 
 
+class GoogleID(db.Model):
+    __tablename__ = "google"
+    user = db.Column("user", db.ForeignKey("user.id"), nullable = False, primary_key = True)
+    sub = db.Column("sub", db.Text, nullable = False)
+
+    def __init__(self, user, sub):
+        self.user = user
+        self.sub = sub
+
+
 class Course(db.Model):
     __tablename__ = "course"
     id = db.Column("id", db.Integer, primary_key = True)

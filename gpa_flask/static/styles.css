@@ -187,6 +187,7 @@ body {
   min-height: 2rem;
   margin-left: var(--s);
   transition: 0.2s;
+  cursor: pointer;
   font-size: large;
   color: #fff;
   background-color: var(--c4);

@@ -1,3 +1,4 @@
+from oauthlib.oauth2 import WebApplicationClient
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from dotenv import dotenv_values
@@ -23,5 +24,6 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 unauthorized_handler = login_manager.unauthorized_handler
+google_client = WebApplicationClient(app.config["GOOGLE_CLIENT_ID"])
 
 from gpa_flask import routes
