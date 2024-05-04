@@ -1,8 +1,9 @@
 from flask import render_template, url_for, redirect, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
-from gpa_flask.__init__ import app, db, bcrypt, mail, unauthorized_handler
-from gpa_flask.models import User, Course
+from gpa_flask.__init__ import app, db, bcrypt, mail, unauthorized_handler, google_client
+from gpa_flask.models import User, Course, GoogleID
 from flask_mail import Message
+import requests, json
 
 def calc_GPA(course_list):
     def grade_int(grade):
@@ -63,6 +64,76 @@ def index():
     session["years"] = current_user.years
     course_list = get_list()
     return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"])
+
+
+def get_google_provider_cfg():
+    return requests.get(app.config["GOOGLE_DISCOVERY_URL"]).json()
+
+@app.route("/oauth", methods=["GET"])
+def oauth():
+    google_provider_cfg = get_google_provider_cfg()
+    auth_endpoint = google_provider_cfg["authorization_endpoint"]
+    
+    request_uri = google_client.prepare_request_uri(
+        auth_endpoint,
+        redirect_uri = request.base_url + "/callback",
+        scope = ["email"]
+    )
+
+    return redirect(request_uri)
+
+
+@app.route("/oauth/callback", methods=["GET"])
+def callback():
+    if request.args.get("error") is not None:
+        return redirect("/signin")
+
+    code = request.args.get("code")
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+    token_url, headers, body = google_client.prepare_token_request(
+        token_endpoint,
+        authorization_response = request.url,
+        redirect_url = request.base_url,
+        code=code
+    )
+    token_response = requests.post(
+        token_url,
+        headers = headers,
+        data = body,
+        auth = (app.config["GOOGLE_CLIENT_ID"], app.config["GOOGLE_CLIENT_SECRET"])
+    )
+    google_client.parse_request_body_response(json.dumps(token_response.json()))
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = google_client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(
+        uri,
+        headers = headers,
+        data = body
+    )
+    sub = userinfo_response.json()["sub"]
+    email = userinfo_response.json()["email"]
+
+    user = User.query.filter(User.email == email).first()
+    if user is None:
+        user = User(email, "")
+        db.session.add(user)
+        db.session.commit()
+        google = GoogleID(user.id, sub)
+        db.session.add(google)
+        db.session.commit()
+        login_user(user, remember = True)
+    else:
+        google = GoogleID.query.filter(GoogleID.user == user.id).first()
+        if google is None:
+            google = GoogleID(user.id, sub)
+            db.session.add(google)
+            db.session.commit()
+            login_user(user, remember = True)
+        elif google.sub == sub:
+            login_user(user, remember = True)
+
+    return redirect(url_for("index"))
 
 
 @app.route("/signin", methods=["GET", "POST"])
@@ -156,6 +227,10 @@ def reset_password(token):
 @app.route("/change_password", methods=["POST"])
 @login_required
 def change_password():
+    if current_user.password == "":
+        flash("You are signed in via google, cannot change password!", "error")
+        return redirect(url_for("index"))
+
     password = request.form["password"]
     if not bcrypt.check_password_hash(current_user.password, password):
         flash("Incorrect password, password change is unsuccessful!", "error")
