@@ -325,11 +325,19 @@ body {
 
 .links {
   display: flex;
+  justify-content: center;
   gap: var(--m);
-  position: fixed;
-  bottom: var(--m);
+  margin-top: auto;
+  padding-bottom: var(--xl);
+}
+
+.bottomLinks {
+  display: flex;
+  justify-content: center;
+  gap: var(--m);
+  position: absolute;
   right: var(--m);
-  z-index: 1; /* Stay on top */
+  bottom: var(--m);
 }
 
 input[type="checkbox"] { accent-color: var(--c4); }
@@ -348,11 +356,9 @@ hr { margin-bottom: var(--xxs); }
   .bottomBar {
     justify-content: center;
   }
-  .links {
-    position: relative;
-    top: var(--s);
-    justify-content: center;
+  .bottomLinks {
+    position: absolute;
+    left: 0px;
     width: 100%;
-    margin: var(--m);
   }
 }
