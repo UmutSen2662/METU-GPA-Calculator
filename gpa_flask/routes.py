@@ -59,11 +59,10 @@ def get_list():
 @app.route("/")
 @login_required
 def index():
-    if "current_year" not in session:
-        session["current_year"] = 1
+    session.setdefault("current_year", 1)
     session["years"] = current_user.years
     course_list = get_list()
-    return render_template("index.html", course_list = course_list, years = session["years"], current_year = session["current_year"])
+    return render_template("index.html", course_list=course_list, years=session["years"], current_year=session["current_year"])
 
 
 def get_google_provider_cfg():
@@ -162,17 +161,17 @@ def register():
         if not current_user.is_authenticated:
             return render_template("register.html")
         return redirect(url_for("index"))
-    else:
-        email = request.form["email"]
-        if User.query.filter(User.email == email).first() is not None:
-            flash("Email already in use try signing in!", "info")
-            return redirect(url_for("signin"))
-        hashed_password = bcrypt.generate_password_hash(request.form["password1"])
-        user = User(email, hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-        return redirect(url_for("index"))
+
+    email = request.form["email"]
+    if User.query.filter(User.email == email).first() is not None:
+        flash("Email already in use try signing in!", "info")
+        return redirect(url_for("signin"))
+    hashed_password = bcrypt.generate_password_hash(request.form["password1"])
+    user = User(email, hashed_password)
+    db.session.add(user)
+    db.session.commit()
+    login_user(user)
+    return redirect(url_for("index"))
 
 
 @app.route("/signout")
@@ -183,17 +182,21 @@ def signout():
     return redirect(url_for("signin"))
 
 
-def send_mail(user):
+def send_password_reset_email(user):
     token = user.get_token()
-    msg = Message("Password reset request", recipients = [user.email], sender="noreply@metugpaclaculator.com")
-    msg.body = f'''
-    To reset your password please follow the link below.
+    reset_url = url_for("reset_password", token=token, _external=True)
+    message = (
+        "To reset your password, please click the link below:\n\n"
+        f"{reset_url}\n\n"
+        "If you did not request a password reset, please ignore this email."
+    )
+    mail.send_message(
+        subject="Password reset request",
+        sender="noreply@metugpaclaculator.com",
+        recipients=[user.email],
+        body=message
+    )
 
-    {url_for("reset_password", token = token, _external = True)}
-    
-    If you did't send a password reset request, please ignore this message.
-    '''
-    mail.send(msg)
 
 @app.route("/recovery_page", methods=["GET", "POST"])
 def recovery_page():
@@ -203,7 +206,7 @@ def recovery_page():
         email = request.form["email"]
         user = User.query.filter(User.email == email).first()
         if user is not None:
-            send_mail(user)
+            send_password_reset_email(user)
         flash("Recovery email has been sent!", "info")
         return redirect(url_for("signin"))
 
@@ -267,42 +270,25 @@ def edit_year(value):
 @app.route("/add_course/<int:season>", methods=["GET"])
 @login_required
 def add_course(season):
-    course = Course(season=season, user=current_user.id)
-    db.session.add(course)
+    new_course = Course(season, current_user.id)
+    db.session.add(new_course)
     db.session.commit()
-    return f"""
-    <div id="{course.id}" class="course">
-        <button class="deleteButton" hx-delete="/delete_course/{course.id}" hx-swap="outerHTML" hx-target="closest .course">X</button>
-        <span><input name="name" id="i{course.id}" type="text" placeholder="Enter course Name" value="" list="courses" autocomplete="off"></span>
-        <span><input name="credit" id="c{course.id}" type="number" style="text-align: center;" min="0" max="10" value="0" onclick="this.select()" autocomplete="off"></span>
-        <select name="grade" id="g{course.id}">
-            <option value="XX" selected>XX</option>
-            <option value="AA">AA</option>
-            <option value="BA">BA</option>
-            <option value="BB">BB</option>
-            <option value="CB">CB</option>
-            <option value="CC">CC</option>
-            <option value="DC">DC</option>
-            <option value="DD">DD</option>
-            <option value="FD">FD</option>
-            <option value="FF">FF</option>
-            <option value="NA">NA</option>
-            <option value="S">S</option>
-            <option value="U">U</option>
-        </select>
-    </div>
-    """
+
+    return render_template(
+        "course.html", 
+        course_id=new_course.id, 
+        course_name="", 
+        course_credit=0, 
+        course_grade="XX"
+    )
 
 
 @app.route("/delete_course/<int:cid>", methods=["DELETE"])
 @login_required
 def delete_course(cid):
-    course = Course.query.filter(Course.id == cid).first()
-    if course.user == current_user.id:
-        Course.query.filter(Course.id == cid).delete()
-        db.session.commit()
-        return ""
-    return 500
+    Course.query.filter(Course.id == cid, Course.user == current_user.id).delete()
+    db.session.commit()
+    return ""
 
 
 @app.route("/change_course", methods=["POST"])

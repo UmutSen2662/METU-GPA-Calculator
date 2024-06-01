@@ -64,38 +64,28 @@ function writeGPA(GPAs){
 };
 
 function openTab(evt, tabName) {
-    currentYear = document.getElementsByClassName("tablinks active")[0].innerText;
-    newYear = tabName;
-    if (currentYear == newYear)
-        return;
+    const tablinks = document.querySelectorAll(".tablinks");
+    const tabcontent = document.querySelectorAll(".tabcontent");
+    const activeLink = document.querySelector(".tablinks.active");
 
-    clearTimeout(timeout2);
-    timeout2 = setTimeout(function () {
-        fetch("/change_year/" + newYear.replace("Year ", ""));
-    }, 100);
+    tablinks.forEach(link => link.classList.remove("active"));
+    tabcontent.forEach(content => content.style.display = "none");
 
-    let i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i+=1) {
-      tabcontent[i].style.display = "none";
-    }
-
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i+=1) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
+    evt.currentTarget.classList.add("active");
     document.getElementById(tabName).style.display = "grid";
-    evt.currentTarget.className += " active";
+
+    if (activeLink.innerText !== evt.currentTarget.innerText) {
+        clearTimeout(timeout2);
+        timeout2 = setTimeout(() => {
+            fetch(`/change_year/${tabName.replace("Year ", "")}`);
+        }, 100);
+    }
 };
 
 function openNav() {
-    if (window.innerWidth / window.innerHeight < 2 / 3){
-        document.getElementById("mySidenav").style.width = "100%";
-    } else {
-        document.getElementById("mySidenav").style.width = "20rem";
-        document.getElementById("main").style.marginRight = "20rem";
-    }
+    const width = (window.innerWidth / window.innerHeight < 2 / 3) ? "100%" : "20rem";
+    document.getElementById("mySidenav").style.width = width;
+    document.getElementById("main").style.marginRight = width;
 };
 function closeNav() {
     document.getElementById("main").style.marginRight = "0";
@@ -106,23 +96,13 @@ function closeNav() {
 };
 
 function toggleContainer(type) {
-    let container = null
-    switch (type) {
-        case "P":
-            container = document.getElementById("change_password");
-            break;
-        case "A":
-            container = document.getElementById("about_section");
-            break;
-        case "C":
-            container = document.getElementById("contact_section");
-            break;
-    }
-    if (container.classList.contains("display")){
-        container.classList.remove("display");
-    } else {
-        container.classList.add("display");    
-    }
+    const toggleContainerMap = {
+        "P": document.getElementById("change_password"),
+        "A": document.getElementById("about_section"),
+        "C": document.getElementById("contact_section")
+    };
+    const container = toggleContainerMap[type];
+    container.classList.toggle("display");
 };
 
 function onChange() {

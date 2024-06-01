@@ -57,11 +57,7 @@
     
     <div id="tab" class="tab">
         {% for i in range(1, years + 1) %}
-        {% if current_year == i %}
-        <button class="tablinks active" onclick="openTab(event, 'Year {{i}}')">Year {{i}}</button>
-        {% else %}
-        <button class="tablinks" onclick="openTab(event, 'Year {{i}}')">Year {{i}}</button>
-        {% endif %}
+        <button class="tablinks {% if current_year == i %}active{% endif %}" onclick="openTab(event, 'Year {{i}}')">Year {{i}}</button>
         {% endfor %}
     </div>
 
@@ -83,17 +79,13 @@
                     <span>Grade</span>
                 </div>
                 {% for course in course_list[season] %}
-                <div id="{{course['id']}}" class="course">        
+                <div id="{{course['id']}}" class="course">
                     <button class="deleteButton" hx-delete="/delete_course/{{course['id']}}" hx-swap="outerHTML" hx-target="closest .course">X</button>
                     <span><input name="name" id="i{{course['id']}}" type="text" placeholder="Enter course Name" value="{{course['name']}}" list="courses" autocomplete="off"></span>
                     <span><input name="credit" id="c{{course['id']}}" type="number" style="text-align: center;" min="0" max="10" value="{{course['credit']}}" onclick="this.select()" autocomplete="off"></span>
                     <select name="grade" id="g{{course['id']}}">
                         {% for grade in ["XX", "AA", "BA", "BB", "CB", "CC", "DC", "DD", "FD", "FF", "NA", "S", "U"] %}
-                        {% if grade == course['grade'] %}
-                        <option value="{{grade}}" selected>{{grade}}</option>
-                        {% else %}
-                        <option value="{{grade}}">{{grade}}</option>
-                        {% endif %}
+                        <option value="{{grade}}" {% if course['grade'] == grade %}selected{% endif %}>{{grade}}</option>
                         {% endfor %}
                     </select>
                 </div>
