@@ -248,6 +248,17 @@ body {
   color: #000
 }
 
+.dimmer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
 /* The side navigation menu */
 .sidenav {
   display: flex;
@@ -255,7 +266,7 @@ body {
   height: 100dvh;
   width: 0;
   position: fixed;
-  z-index: 1; /* Stay on top */
+  z-index: 2; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
   background-color: var(--c1);
@@ -344,7 +355,7 @@ input[type="checkbox"] { accent-color: var(--c4); }
 
 hr { margin-bottom: var(--xxs); }
 
-@media only screen and (max-aspect-ratio: 2/3) {
+@media only screen and (max-width: 40rem) {
   /* For mobile phones: */
   .banner h1{
     font-size: x-large;

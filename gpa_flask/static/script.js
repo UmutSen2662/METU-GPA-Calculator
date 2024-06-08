@@ -83,11 +83,15 @@ function openTab(evt, tabName) {
 };
 
 function openNav() {
-    const width = (window.innerWidth / window.innerHeight < 2 / 3) ? "100%" : "20rem";
-    document.getElementById("mySidenav").style.width = width;
-    document.getElementById("main").style.marginRight = width;
+    if (window.innerWidth < 940) {
+        document.getElementById("dimmer").style.display = "block";
+    } else {
+        document.getElementById("main").style.marginRight = "20rem";
+    }
+    document.getElementById("mySidenav").style.width = "20rem";
 };
 function closeNav() {
+    document.getElementById("dimmer").style.display = "none";
     document.getElementById("main").style.marginRight = "0";
     document.getElementById("mySidenav").style.width = "0";
     document.querySelectorAll('.display').forEach((elm) => {
