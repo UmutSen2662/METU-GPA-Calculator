@@ -2,21 +2,20 @@ from flask import render_template, url_for, redirect, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from gpa_flask.__init__ import app, db, bcrypt, mail, unauthorized_handler, google_client
 from gpa_flask.models import User, Course, GoogleID
-from flask_mail import Message
-import requests, json
+import requests, json, math
 
 def calc_GPA(course_list):
     def grade_int(grade):
         match grade:
-            case "AA": return 4
-            case "BA": return 3.5
-            case "BB": return 3
-            case "CB": return 2.5
-            case "CC": return 2
-            case "DC": return 1.5
-            case "DD": return 1
-            case "FD": return 0.5
-            case "S": return 4
+            case "AA": return 400
+            case "BA": return 350
+            case "BB": return 300
+            case "CB": return 250
+            case "CC": return 200
+            case "DC": return 150
+            case "DD": return 100
+            case "FD": return 50
+            case "S": return 400
         return 0
 
     seen_list = []
@@ -39,8 +38,8 @@ def calc_GPA(course_list):
         for course in seen_list:
             total_grades += grade_int(course["grade"]) * course["credit"]
             total_credits += course["credit"]
-        gpa = ("%.2f" % (current_grades/current_credits)).rstrip('0').rstrip('.') if current_credits > 0 else ""
-        cgpa = ("%.2f" % (total_grades/total_credits)).rstrip('0').rstrip('.') if total_credits > 0 else ""
+        gpa = ("%.2f" % (math.ceil(current_grades/current_credits)/100)).rstrip('0').rstrip('.') if current_credits > 0 else ""
+        cgpa = ("%.2f" % (math.ceil(total_grades/total_credits)/100)).rstrip('0').rstrip('.') if total_credits > 0 else ""
         GPAs.append(gpa)
         CGPAs.append(cgpa)
     data = str({"g": GPAs, "c": CGPAs}).replace("\'", "\"")
