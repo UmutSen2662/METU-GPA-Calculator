@@ -338,7 +338,6 @@ body {
   display: flex;
   justify-content: center;
   gap: var(--m);
-  margin-top: auto;
   padding-bottom: var(--xl);
 }
 
