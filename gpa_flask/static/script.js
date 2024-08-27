@@ -1,11 +1,12 @@
 let timeout = null;
 let timeout2 = null;
 let timeout3 = null;
+let csv = null;
 
 function indexEventListeners(){
     // listen for changes to courses and update values after delay
     document.addEventListener("change", function(event) {
-        if (event.target.className !== "formInput"){
+        if (event.target.className !== "formInput" && event.target.id !== "import") {
             clearTimeout(timeout);
             timeout = setTimeout(function () {
                 if (event.target.id[0] == "c"){
@@ -23,6 +24,18 @@ function indexEventListeners(){
                     writeGPA(data);
                 });
             }, 300);
+        } else if (event.target.id == "import") {
+            if (event.target.files[0]) {
+                if (event.target.files[0].type == "text/csv") {
+                    csv = event.target.files[0];
+                    document.getElementById("import_btn").style.display = "block";
+                    event.target.parentNode.childNodes[1].innerText = "Selected file\n" + event.target.files[0].name;
+                }
+            } else {
+                csv = null;
+                document.getElementById("import_btn").style.display = "none";
+                event.target.parentNode.childNodes[1].innerText = "Select a csv file";
+            }
         }
     }, false);
 
@@ -51,6 +64,20 @@ function indexEventListeners(){
         }, 500);
     }, false);
 };
+
+function Send_csv() {
+    if (csv) {
+        var reader = new FileReader();
+        reader.readAsText(csv, "UTF-8");
+        reader.onload = function (evt) {
+            fetch("/", {
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({'csv': evt.target.result})
+            }).then(() => location.href = "/");
+        }
+    }
+}
 
 function writeGPA(GPAs){
     let i = 0;
@@ -103,7 +130,8 @@ function toggleContainer(type) {
     const toggleContainerMap = {
         "P": document.getElementById("change_password"),
         "A": document.getElementById("about_section"),
-        "C": document.getElementById("contact_section")
+        "C": document.getElementById("contact_section"),
+        "D": document.getElementById("data_section")
     };
     const container = toggleContainerMap[type];
     container.classList.toggle("display");

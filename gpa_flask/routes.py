@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash, request, session
+from flask import Response, render_template, url_for, redirect, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
 from gpa_flask.__init__ import app, db, bcrypt, mail, unauthorized_handler, google_client
 from gpa_flask.models import User, Course, GoogleID
@@ -55,13 +55,32 @@ def get_list():
         ])
     return course_list
 
-@app.route("/")
+def handle_csv(data):
+    lines = data.splitlines()
+    table = [line.split(",") for line in lines]
+
+    if table[0] != ["Course Name", "Season", "Credit", "Grade"]:
+        return
+    
+    for row in table[1:]:
+        match = Course.query.filter(Course.name == row[0], Course.season == row[1], Course.credit == row[2], Course.grade == row[3])
+        if match.count() == 0:
+            course = Course(season = row[1], name = row[0], credit = row[2], grade = row[3], user = current_user.id)
+            db.session.add(course)
+            db.session.commit()
+
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    session.setdefault("current_year", 1)
-    session["years"] = current_user.years
-    course_list = get_list()
-    return render_template("index.html", course_list=course_list, years=session["years"], current_year=session["current_year"])
+    if request.method == "GET":
+        session.setdefault("current_year", 1)
+        session["years"] = current_user.years
+        course_list = get_list()
+        return render_template("index.html", course_list=course_list, years=session["years"], current_year=session["current_year"])
+    else:
+        data = request.form["csv"]
+        handle_csv(data)
+        return "OK"
 
 
 def get_google_provider_cfg():
@@ -312,6 +331,19 @@ def change_course():
 @login_required
 def get_gpa():
     return calc_GPA(get_list())
+
+
+@app.route("/get_csv", methods=["get"])
+@login_required
+def get_csv():
+    csv_data = "name,season,credit,grade\n"
+    courses = Course.query.filter(Course.user == current_user.id)
+    for course in courses:
+        csv_data += f"{course.name},{course.season},{course.credit},{course.grade}\n"
+    
+    response = Response(csv_data, content_type="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=course_data.csv"
+    return response
 
 
 @app.route("/terms_of_service", methods=["get"])

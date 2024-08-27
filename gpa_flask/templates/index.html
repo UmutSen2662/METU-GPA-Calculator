@@ -2,6 +2,8 @@
 {% block script %}
 <script src="https://unpkg.com/htmx.org@1.5.0"></script>
 <script> indexEventListeners(); </script>
+<script>Confirm_Signout = () => {if (confirm("You are about to sign out, are you sure ?")) {window.location.href = "/signout";}};</script>
+<script>Confirm_Export = () => {if (confirm("Export course data as csv ?")) {window.location.href = "/get_csv";}};</script>
 {% endblock script %}
 {% block content %}
 <body id="main" data-color-mode="auto">
@@ -41,7 +43,18 @@
                 <p> Linkedin profile: <br>linkedin.com/in/umut-sen-2662-</p>
             </div>
         </div>
-        <a class="sidebarText" href="/signout">Sign out</a>
+        <span class="sidebarText" onclick="toggleContainer('D')">Import Data</span>
+        <div class="toggleContainer" id="data_section">
+            <div class="multiline">
+                <label class="drop_area" id="drop_area">
+                    <p id="csv_text">Select a csv file</p>
+                    <input type="file" name="import" id="import" accept=".csv">
+                </label>
+                <button class="primaryColorBtn" id="import_btn" onclick="Send_csv()" style="display: none;">Import csv file</button>
+            </div>
+        </div>
+        <a class="sidebarText" href="#" onclick="Confirm_Export();return false;">Export Data</a>
+        <a class="sidebarText" href="#" onclick="Confirm_Signout();return false;">Sign out</a>
         <div class="links">
             <a href="{{ url_for('terms_of_service') }}" target="_blank">Terms of Service</a>
             <a href="{{ url_for('privacy_policy') }}" target="_blank">Privacy Policy</a>
