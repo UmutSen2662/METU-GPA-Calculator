@@ -63,9 +63,9 @@ def handle_csv(data):
         return
     
     for row in table[1:]:
-        match = Course.query.filter(Course.name == row[0], Course.season == row[1], Course.credit == row[2], Course.grade == row[3])
+        match = Course.query.filter(Course.name == row[0], Course.season == row[1], Course.credit == row[2], Course.grade == row[3], Course.user == current_user.id)
         if match.count() == 0:
-            course = Course(season = row[1], name = row[0], credit = row[2], grade = row[3], user = current_user.id)
+            course = Course(name = row[0], season = row[1], credit = row[2], grade = row[3], user = current_user.id)
             db.session.add(course)
             db.session.commit()
 
