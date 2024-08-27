@@ -59,7 +59,7 @@ def handle_csv(data):
     lines = data.splitlines()
     table = [line.split(",") for line in lines]
 
-    if table[0] != ["Course Name", "Season", "Credit", "Grade"]:
+    if table[0] != ["name","season","credit","grade"]:
         return
     
     for row in table[1:]:
